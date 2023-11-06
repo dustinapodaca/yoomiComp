@@ -28,3 +28,9 @@ test("Renders Exercise Name", () => {
   expect(firstExerciseName).toBeInTheDocument();
 });
 
+test("Renders Image of Exercise", () => {
+  render(<App />);
+  const image = screen.getByAltText("Current exercise");
+  expect(image).toBeInTheDocument();
+});
+

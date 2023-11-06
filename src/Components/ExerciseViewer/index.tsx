@@ -13,7 +13,7 @@ import setupSVG from "../../assets/svg/setup.svg";
 import movementSVG from "../../assets/svg/movement.svg";
 import tipsSVG from "../../assets/svg/tips.svg";
 
-// Base configuration for an exercise
+//BASE CONFIG FOR EXERCISE
 interface BaseConfig {
   numSets: number;
   numReps: number;
@@ -23,39 +23,40 @@ interface BaseConfig {
   holdDurationMs?: number;
 }
 
-// Instructions for an exercise
+//EXERCISE INSTRUCTIONS
 interface Instructions {
   setup: string[];
   movement: string[];
   tips: string[];
 }
 
-// Details of an exercise
+//EXERCISE DETAILS
 interface ExerciseDetails {
   instructions: Instructions;
   deviceSetupPosition: string;
   exerciseEquipment: string[];
 }
 
-// Blueprint for an exercise
+//BLUEPRINT FOR EXERCISE
 interface ExerciseBlueprint {
   baseConfig: BaseConfig;
   exerciseId: string;
 }
 
-// Combined metadata for an exercise
+// COMBINED EXERCISE METADATA
 interface ExerciseMetadata {
   exerciseBlueprint: ExerciseBlueprint;
   exerciseDetails: ExerciseDetails;
   friendlyExerciseName: string;
 }
 
-// Props for the Exercise component
+// PROPS FOR EXERCISE COMPONENT
 interface ExerciseProps {
   exercise: ExerciseMetadata;
   isActive: boolean;
 }
 
+//EXERCISE INFO COMPONENT - DYNAMICALLY CHANGES BASED ON EXERCISE
 const Exercise = ({ exercise, isActive }: ExerciseProps) => (
   <div className={`min-w-full ${isActive ? "active" : ""}`}>
     <div className="flex h-full flex-col justify-between bg-white rounded-xl p-4">
@@ -191,6 +192,9 @@ const exerciseImages: Record<string, string> = {
 const fallbackImage = defaultImage;
 
 
+
+
+// CAROUSEL OF EXERCISES WITHIN VIEWING CONTAINER
 const ExerciseCarousel = ({ exercises }: ExerciseCarouselProps) => {
   const [index, setIndex] = useState(0);
 
@@ -222,6 +226,9 @@ const ExerciseCarousel = ({ exercises }: ExerciseCarouselProps) => {
     //THIS CLEARS THE INTERVAL WHEN THE COMPONENT UNMOUNTS
     return () => clearInterval(timer);
   }, [goNext]);
+
+
+  //RAN OUT OF TIME TO IMPLEMENT TIMER BUTTON VIEWER IN THE 24HR PERIOD BUT WOULD HAVE ADDED FUNCTIONALITY PROBABLY WITH ANOTHER USEEFFECT ETC
 
   return (
     <MotionConfig transition={{ duration: 0.4, ease: [0.32, 0.72, 0, 1] }}>
@@ -286,7 +293,7 @@ const ExerciseCarousel = ({ exercises }: ExerciseCarouselProps) => {
   );
 };
 
-
+//VIEWING CONTAINER FOR EXERCISES - COULD BE APP CONTAINER BUT RAN OUT OF TIME
 const ExerciseViewer = () => {
 
   return (
