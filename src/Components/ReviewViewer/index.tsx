@@ -181,7 +181,7 @@ const ReviewCarousel = ({ reviews }: CarouselProps) => {
                 />
               ) : null
             )} */}
-            <div className="p-4 md:w-1/2">
+            <div className="p-4 w-full">
               <h2 className="text-2xl font-bold mb-2">Exercise Two</h2>
               <p className="text-sm mb-4">5 Reps x 3 Sets x 10s Hold</p>
 
@@ -266,12 +266,12 @@ const ReviewViewer = () => {
   return (
     <section className="bg-white mt-4 md:mt-3 shadow-xl rounded-xl">
       <div className="mx-auto max-w-[1167px] px-4 py-6 sm:px-6 sm:py-6 lg:me-0 lg:pe-0 lg:ps-8">
-        <div className="items-center grid grid-cols-1 gap-y-8 lg:grid-cols-3 lg:items-center lg:gap-x-16">
-          <div className="text-black text-center ltr:sm:text-left rtl:sm:text-right">
+        <div className="items-center grid gap-y-8 grid-cols-3 lg:items-center lg:gap-x-16">
+          <div className="col-span-1 text-black text-center ltr:sm:text-left rtl:sm:text-right">
             <img src={image1} alt="exercise" className="rounded-lg"/>
           </div>
 
-          <div className="lg:col-span-2 lg:mx-0 mt-4 sm:mt-0">
+          <div className="col-span-2 lg:mx-0 mt-4 sm:mt-0">
             <ReviewCarousel reviews={reviews} />
             
           </div>
