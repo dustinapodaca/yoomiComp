@@ -3,6 +3,10 @@ import { motion, MotionConfig, AnimatePresence } from "framer-motion";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
 
 import image1 from '../../assets/img/image1.jpg';
+import image2 from '../../assets/img/image2.jpg';
+import image3 from '../../assets/img/image3.jpg';
+import defaultImage from '../../assets/img/defaultImage.jpg';
+
 import { metadata } from "../../mockData/metadata";
 
 import setupSVG from "../../assets/svg/setup.svg";
@@ -57,7 +61,7 @@ const Exercise = ({ exercise, isActive }: ExerciseProps) => (
     <div className="flex h-full flex-col justify-between bg-white rounded-xl p-4">
       <div>
         <AnimatePresence>
-          <div className="pr-6 w-full mb-8">
+          <div className="pr-6 w-full mb-8 min-h-[324px]">
             {/* Exercise Name Here is Dynamic */}
             <motion.div
               key={exercise.friendlyExerciseName}
@@ -96,70 +100,70 @@ const Exercise = ({ exercise, isActive }: ExerciseProps) => (
             {/* Animation for Setup Instructions */}
             <div className="flex flex-row">
               <img src={setupSVG} className="w-10 h-10" alt="setupIcon" />
-              <motion.div
-                key={`${exercise.friendlyExerciseName}-setup`}
-                initial={{ scale: 0.7, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                exit={{ scale: 0.7, opacity: 0 }}
-                transition={{ duration: 0.3, ease: [0.32, 0.72, 0, 1] }}
-              >
                 <div className="mb-4 ml-5 h-[60px] font-sans">
                   <h3 className="font-semibold">Setup</h3>
-                  {exercise.exerciseDetails.instructions.setup.map(
-                    (step, index) => (
-                      <p className="text-sm text-neutral-600" key={index}>
-                        {step}
-                      </p>
-                    )
-                  )}
+                  <motion.div
+                    key={`${exercise.friendlyExerciseName}-setup`}
+                    initial={{ scale: 0.7, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    exit={{ scale: 0.7, opacity: 0 }}
+                    transition={{ duration: 0.3, ease: [0.32, 0.72, 0, 1] }}
+                  >
+                      {exercise.exerciseDetails.instructions.setup.map(
+                        (step, index) => (
+                          <p className="text-sm text-neutral-600" key={index}>
+                            {step}
+                          </p>
+                        )
+                      )}
+                  </motion.div>
                 </div>
-              </motion.div>
             </div>
 
             {/* Animation for Movement Instructions */}
             <div className="flex flex-row">
               <img src={movementSVG} className="w-10 h-10" alt="movementIcon" />
-              <motion.div
-                key={`${exercise.friendlyExerciseName}-movement`}
-                initial={{ scale: 0.7, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                exit={{ scale: 0.7, opacity: 0 }}
-                transition={{ duration: 0.3, ease: [0.32, 0.72, 0, 1] }}
-              >
                 <div className="mb-4 ml-5 h-[60px] font-sans">
                   <h3 className="font-semibold">Movement</h3>
-                  {exercise.exerciseDetails.instructions.movement.map(
-                    (step, index) => (
-                      <p className="text-sm text-neutral-600" key={index}>
-                        {step}
-                      </p>
-                    )
-                  )}
-                </div>
-              </motion.div>
+                  <motion.div
+                    key={`${exercise.friendlyExerciseName}-movement`}
+                    initial={{ scale: 0.7, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    exit={{ scale: 0.7, opacity: 0 }}
+                    transition={{ duration: 0.3, ease: [0.32, 0.72, 0, 1] }}
+                  >
+                      {exercise.exerciseDetails.instructions.movement.map(
+                        (step, index) => (
+                          <p className="text-sm text-neutral-600" key={index}>
+                            {step}
+                          </p>
+                        )
+                      )}
+                  </motion.div>
+              </div>
             </div>
 
             {/* Animation for Tips Instructions */}
             <div className="flex flex-row">
               <img src={tipsSVG} className="w-10 h-10" alt="tipsIcon" />
-              <motion.div
-                key={`${exercise.friendlyExerciseName}-tips`}
-                initial={{ scale: 0.7, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                exit={{ scale: 0.7, opacity: 0 }}
-                transition={{ duration: 0.3, ease: [0.32, 0.72, 0, 1] }}
-              >
                 <div className="mb-4 ml-5 h-[80px] font-sans overflow-y-scroll">
                   <h3 className="font-semibold">Tips</h3>
-                  {exercise.exerciseDetails.instructions.tips.map(
-                    (tip, index) => (
-                      <p className="text-sm text-neutral-600" key={index}>
-                        {tip}
-                      </p>
-                    )
-                  )}
-                </div>
-              </motion.div>
+                  <motion.div
+                    key={`${exercise.friendlyExerciseName}-tips`}
+                    initial={{ scale: 0.7, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    exit={{ scale: 0.7, opacity: 0 }}
+                    transition={{ duration: 0.3, ease: [0.32, 0.72, 0, 1] }}
+                  >
+                      {exercise.exerciseDetails.instructions.tips.map(
+                        (tip, index) => (
+                          <p className="text-sm text-neutral-600" key={index}>
+                            {tip}
+                          </p>
+                        )
+                      )}
+                  </motion.div>
+              </div>
             </div>
           </div>
         </AnimatePresence>
@@ -177,11 +181,26 @@ interface ExerciseCarouselProps {
   exercises: ExerciseMetadataArray;
 }
 
+  //DYNAMICALLY CHANGE IMAGE ALONG WITH THE EXERCISE SETUP:
+const exerciseImages: Record<string, string> = {
+  SIDELYING_HIP_ABDUCTION: image1,
+  SHOULDER_HORIZONTAL_ABDUCTION_WITH_RESISTANCE_ON_SWISS_BALL: image2,
+  STANDING_ITB_STRETCH: image3,
+};
+//FALLBACK IN CASE OF ISSUES WITH THE IMAGE
+const fallbackImage = defaultImage;
+
+
 const ExerciseCarousel = ({ exercises }: ExerciseCarouselProps) => {
   const [index, setIndex] = useState(0);
 
   // HERE WE ARE USING useMemo TO CACHE THE ACTIVE EXERCISE
   const activeExercise = useMemo(() => exercises[index], [exercises, index]);
+
+  //GET THE CURRENT IMAGE FOR THE EXERCISE OR THE FALLBACK IMAGE HERE
+  const currentImage =
+    exerciseImages[activeExercise.exerciseBlueprint.exerciseId] ||
+    fallbackImage;
 
   // CHANGED TO A FUNCTION TO GO TO THE NEXT EXERCISE INSTEAD OF INLINE FUNCTION THAT PREV WAS ONLY CHANGING THE INDEX BY 1
   // AND ALSO MEMOIZED THE FUNCTION AND ADDED useCallback TO PREVENT UNNECESSARY RE-RENDERS
@@ -207,46 +226,59 @@ const ExerciseCarousel = ({ exercises }: ExerciseCarouselProps) => {
   return (
     <MotionConfig transition={{ duration: 0.4, ease: [0.32, 0.72, 0, 1] }}>
       <div className="h-full bg-white">
-        <div className="mx-auto flex h-full max-w-7xl flex-col justify-center rounded-xl">
-          <div className="relative rounded-xl">
-            <AnimatePresence initial={false}>
-              {activeExercise && (
-                <Exercise
-                  key={activeExercise.exerciseBlueprint.exerciseId}
-                  exercise={activeExercise}
-                  isActive={true}
+        <div className="mx-auto max-w-7xl flex-col justify-center rounded-xl">
+          <div className="grid grid-cols-3 gap-4 relative">
+            {/* IMAGE ANIMATION WAS PRESENTING ISSUES AND RAN OUT OF TIME SO SOME OF THIS IS A BIT JANKY*/}
+            <div className="col-span-1 flex items-center justify-center min-w-[375px]">
+              <img
+                  key={currentImage}
+                  src={currentImage}
+                  alt="Current exercise"
+                  className="rounded-lg object-contain max-h-full max-w-full transition-all ease-in-out duration-500"
                 />
-              )}
-            </AnimatePresence>
+     
+            </div>
 
-            <motion.button
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 0.7 }}
-              exit={{ opacity: 0, pointerEvents: "none" }}
-              whileHover={{
-                opacity: 1,
-                backgroundColor: "#076787",
-              }}
-              className="absolute right-28 bottom-0 flex h-9 w-9 items-center justify-center rounded-full outline outline-1 hover:outline-none bg-white hover:text-white"
-              onClick={goPrevious}
-            >
-              <ChevronLeftIcon className="h-5 w-5 text-black hover:text-white" />
-            </motion.button>
+            {/* EXERCISE INFO ANIMATION */}
+            <div className="col-span-2">
+              <AnimatePresence initial={false}>
+                {activeExercise && (
+                  <Exercise
+                    key={activeExercise.exerciseBlueprint.exerciseId}
+                    exercise={activeExercise}
+                    isActive={true}
+                  />
+                )}
+              </AnimatePresence>
 
-            <motion.button
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 0.7 }}
-              exit={{ opacity: 0, pointerEvents: "none" }}
-              whileHover={{
-                opacity: 1,
-                backgroundColor: "#076787",
-              }}
-              className="absolute right-14 bottom-0 flex h-9 w-9 items-center justify-center rounded-full outline outline-1 hover:outline-none bg-white hover:text-white"
-              onClick={goNext}
-            >
-              <ChevronRightIcon className="h-5 w-5 text-black hover:text-white" />
-            </motion.button>
+              <motion.button
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 0.7 }}
+                exit={{ opacity: 0, pointerEvents: "none" }}
+                whileHover={{
+                  opacity: 1,
+                  backgroundColor: "#076787",
+                }}
+                className="absolute right-28 bottom-0 flex h-9 w-9 items-center justify-center rounded-full outline outline-1 hover:outline-none bg-white hover:text-white"
+                onClick={goPrevious}
+              >
+                <ChevronLeftIcon className="h-5 w-5 text-black hover:text-white" />
+              </motion.button>
 
+              <motion.button
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 0.7 }}
+                exit={{ opacity: 0, pointerEvents: "none" }}
+                whileHover={{
+                  opacity: 1,
+                  backgroundColor: "#076787",
+                }}
+                className="absolute right-14 bottom-0 flex h-9 w-9 items-center justify-center rounded-full outline outline-1 hover:outline-none bg-white hover:text-white"
+                onClick={goNext}
+              >
+                <ChevronRightIcon className="h-5 w-5 text-black hover:text-white" />
+              </motion.button>
+            </div>
           </div>
         </div>
       </div>
@@ -254,19 +286,13 @@ const ExerciseCarousel = ({ exercises }: ExerciseCarouselProps) => {
   );
 };
 
+
 const ExerciseViewer = () => {
+
   return (
     <section className="bg-white mt-4 md:mt-3 shadow-xl rounded-xl">
       <div className="mx-auto max-w-[1200px] max-h-[500px] px-4 py-6 sm:px-6 sm:py-6 lg:me-0 lg:pe-0 lg:ps-8">
-        <div className="items-center grid gap-y-8 grid-cols-3 lg:items-center lg:gap-x-10">
-          <div className="col-span-1 text-black text-center ltr:sm:text-left rtl:sm:text-right">
-            <img src={image1} alt="exercise" className="rounded-lg" />
-          </div>
-
-          <div className="col-span-2 lg:mx-0 mt-4 sm:mt-0">
-            <ExerciseCarousel exercises={metadata} />
-          </div>
-        </div>
+        <ExerciseCarousel exercises={metadata} />
       </div>
     </section>
   );
