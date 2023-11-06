@@ -1,4 +1,4 @@
-const metadata = [
+export const metadata = [
 	{
 		exerciseBlueprint: {
 			baseConfig: {

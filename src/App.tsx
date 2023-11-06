@@ -1,11 +1,16 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import ExerciseContainer from './Components/ExerciseContainer';
 
 function App() {
   return (
     <>
-      <p>Start</p>
+      <main>
+        <div className="flex justify-center items-center h-screen">
+          <p>Hello</p>
+          <ExerciseContainer />
+        </div>
+      </main>
     </>
   );
 }
