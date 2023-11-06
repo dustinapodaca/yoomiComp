@@ -95,4 +95,3 @@ export const metadata = [
 		friendlyExerciseName: "Standing ITB Stretch",
 	},
 ];
-
