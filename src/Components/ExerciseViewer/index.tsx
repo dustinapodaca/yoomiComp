@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { motion, MotionConfig, AnimatePresence } from "framer-motion";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
 
@@ -16,7 +16,7 @@ interface BaseConfig {
   side: string;
   restDurationMs: number;
   setDurationMs: number;
-  holdDurationMs?: number; // Optional since it's not present in all objects
+  holdDurationMs?: number;
 }
 
 // Instructions for an exercise
@@ -82,6 +82,8 @@ const Exercise = ({ exercise, isActive }: ExerciseProps) => (
               <p className="text-sm mb-4 font-sans">
                 {exercise.exerciseBlueprint.baseConfig.numReps} Reps x{" "}
                 {exercise.exerciseBlueprint.baseConfig.numSets} Sets
+                
+                {/* HERE THE HOLD DURATION IS OPTIONAL BUT ALSO NEEDS TO BE CONVERTED TO SECONDS  */}
                 {exercise.exerciseBlueprint.baseConfig.holdDurationMs
                   ? ` x ${
                       exercise.exerciseBlueprint.baseConfig.holdDurationMs /
@@ -167,10 +169,10 @@ const Exercise = ({ exercise, isActive }: ExerciseProps) => (
 );
 
 
-// The type for the array of exercises, which could be imported from the other file
+// TYPE FOR ARRAY OF EXERCISE METADATA
 type ExerciseMetadataArray = ExerciseMetadata[];
 
-// Props for the ExerciseCarousel component
+//PROPS FOR CAROUSEL
 interface ExerciseCarouselProps {
   exercises: ExerciseMetadataArray;
 }
@@ -178,57 +180,73 @@ interface ExerciseCarouselProps {
 const ExerciseCarousel = ({ exercises }: ExerciseCarouselProps) => {
   const [index, setIndex] = useState(0);
 
+  // HERE WE ARE USING useMemo TO CACHE THE ACTIVE EXERCISE
+  const activeExercise = useMemo(() => exercises[index], [exercises, index]);
+
+  // CHANGED TO A FUNCTION TO GO TO THE NEXT EXERCISE INSTEAD OF INLINE FUNCTION THAT PREV WAS ONLY CHANGING THE INDEX BY 1
+  // AND ALSO MEMOIZED THE FUNCTION AND ADDED useCallback TO PREVENT UNNECESSARY RE-RENDERS
+  const goNext = useCallback(() => {
+    setIndex((currentIndex) => (currentIndex + 1) % exercises.length);
+  }, [exercises.length]);
+
+  //DID THE SAME HERE FOR THE GO PREVIOUS FUNCTION AS WELL
+  const goPrevious = useCallback(() => {
+    setIndex(
+      (currentIndex) => (currentIndex - 1 + exercises.length) % exercises.length
+    );
+  }, [exercises.length]);
+
+  //USE EFFECT TO SET THE INTERVAL FOR THE EXERCISES TO CHANGE ON A 10 SECOND TIMER
+  useEffect(() => {
+    const timer = setInterval(goNext, 10000); // 10 SEC IN MILLISECONDS
+
+    //THIS CLEARS THE INTERVAL WHEN THE COMPONENT UNMOUNTS
+    return () => clearInterval(timer);
+  }, [goNext]);
+
   return (
     <MotionConfig transition={{ duration: 0.4, ease: [0.32, 0.72, 0, 1] }}>
       <div className="h-full bg-white">
         <div className="mx-auto flex h-full max-w-7xl flex-col justify-center rounded-xl">
           <div className="relative rounded-xl">
             <AnimatePresence initial={false}>
-              {exercises.map((exercise, i) =>
-                i === index ? (
-                  <Exercise
-                    key={exercise.exerciseBlueprint.exerciseId}
-                    exercise={exercise}
-                    isActive={i === index}
-                  />
-                ) : null
-              )}
-            </AnimatePresence>
-            <AnimatePresence initial={false}>
-              {index > 0 && (
-                <motion.button
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 0.7 }}
-                  exit={{ opacity: 0, pointerEvents: "none" }}
-                  whileHover={{
-                    opacity: 1,
-                    backgroundColor: "#076787",
-                  }}
-                  className="absolute right-28 bottom-0 flex h-9 w-9 items-center justify-center rounded-full outline outline-1 hover:outline-none bg-white hover:text-white"
-                  onClick={() => setIndex(index - 1)}
-                >
-                  <ChevronLeftIcon className="h-5 w-5 text-black hover:text-white" />
-                </motion.button>
+              {activeExercise && (
+                <Exercise
+                  key={activeExercise.exerciseBlueprint.exerciseId}
+                  exercise={activeExercise}
+                  isActive={true}
+                />
               )}
             </AnimatePresence>
 
-            <AnimatePresence initial={false}>
-              {index + 1 < exercises.length && (
-                <motion.button
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 0.7 }}
-                  exit={{ opacity: 0, pointerEvents: "none" }}
-                  whileHover={{
-                    opacity: 1,
-                    backgroundColor: "#076787",
-                  }}
-                  className="absolute right-14 bottom-0 flex h-9 w-9 items-center justify-center rounded-full outline outline-1 hover:outline-none bg-white hover:text-white"
-                  onClick={() => setIndex(index + 1)}
-                >
-                  <ChevronRightIcon className="h-5 w-5 text-black hover:text-white" />
-                </motion.button>
-              )}
-            </AnimatePresence>
+            <motion.button
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 0.7 }}
+              exit={{ opacity: 0, pointerEvents: "none" }}
+              whileHover={{
+                opacity: 1,
+                backgroundColor: "#076787",
+              }}
+              className="absolute right-28 bottom-0 flex h-9 w-9 items-center justify-center rounded-full outline outline-1 hover:outline-none bg-white hover:text-white"
+              onClick={goPrevious}
+            >
+              <ChevronLeftIcon className="h-5 w-5 text-black hover:text-white" />
+            </motion.button>
+
+            <motion.button
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 0.7 }}
+              exit={{ opacity: 0, pointerEvents: "none" }}
+              whileHover={{
+                opacity: 1,
+                backgroundColor: "#076787",
+              }}
+              className="absolute right-14 bottom-0 flex h-9 w-9 items-center justify-center rounded-full outline outline-1 hover:outline-none bg-white hover:text-white"
+              onClick={goNext}
+            >
+              <ChevronRightIcon className="h-5 w-5 text-black hover:text-white" />
+            </motion.button>
+
           </div>
         </div>
       </div>
